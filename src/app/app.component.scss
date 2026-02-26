@@ -1,0 +1,789 @@
+// ── Variables ──────────────────────────────────────────────────────────────
+$gold: #d4af37;
+$gold-light: #f0d060;
+$gold-dark: #a8881a;
+$cream: #fdf8f0;
+$deep: #1a0a00;
+$text-light: rgba(255, 255, 255, 0.92);
+$glass-bg: rgba(255, 255, 255, 0.08);
+$glass-border: rgba(212, 175, 55, 0.3);
+
+// ── Fonts ───────────────────────────────────────────────────────────────────
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;600&display=swap');
+
+// ── Reset & Base ────────────────────────────────────────────────────────────
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:host {
+  display: block;
+  font-family: 'EB Garamond', serif;
+  background: $cream;
+  color: $deep;
+  overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+// ── Keyframes ───────────────────────────────────────────────────────────────
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes petalFall {
+  0% {
+    transform: translateY(-10vh) rotate(0deg) translateX(0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(110vh) rotate(720deg) translateX(60px);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.4), 0 0 20px rgba(212, 175, 55, 0.1);
+  }
+
+  50% {
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.7), 0 0 50px rgba(212, 175, 55, 0.3);
+  }
+}
+
+@keyframes scrollDot {
+
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translateY(10px);
+    opacity: 0.3;
+  }
+}
+
+@keyframes revealIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ── Shared Utilities ────────────────────────────────────────────────────────
+.section-pretitle {
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: $gold;
+  margin-bottom: 0.75rem;
+  text-align: center;
+
+  &.light {
+    color: $gold-light;
+  }
+}
+
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 300;
+  text-align: center;
+  color: $deep;
+  margin-bottom: 3rem;
+  line-height: 1.2;
+
+  &.light {
+    color: $cream;
+  }
+}
+
+.glass-card {
+  background: $glass-bg;
+  border: 1px solid $glass-border;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 16px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(212, 175, 55, 0.15);
+  }
+}
+
+// ── Scroll Reveal ────────────────────────────────────────────────────────────
+.scroll-revealed {
+  animation: revealIn 0.7s ease forwards;
+}
+
+// ── Petals ───────────────────────────────────────────────────────────────────
+.petals-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.petal {
+  position: absolute;
+  top: -5%;
+  font-size: clamp(14px, 2vw, 22px);
+  animation: petalFall linear infinite;
+  will-change: transform;
+  opacity: 0.7;
+}
+
+// ── Navigation ────────────────────────────────────────────────────────────────
+.nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: center;
+
+  &__list {
+    list-style: none;
+    display: flex;
+    gap: 2.5rem;
+  }
+
+  &__btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: $text-light;
+    padding: 0.4rem 0;
+    position: relative;
+    transition: color 0.3s;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: $gold;
+      transition: width 0.3s;
+    }
+
+    &:hover {
+      color: $gold-light;
+
+      &::after {
+        width: 100%;
+      }
+    }
+  }
+}
+
+// ── Hero ──────────────────────────────────────────────────────────────────────
+.hero {
+  position: relative;
+  height: 100svh;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transform: scale(1.05);
+    transition: transform 10s ease;
+    z-index: 0;
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+        rgba(10, 5, 0, 0.45) 0%,
+        rgba(10, 5, 0, 0.6) 50%,
+        rgba(10, 5, 0, 0.75) 100%);
+    z-index: 1;
+  }
+
+  &__content {
+    position: relative;
+    z-index: 5;
+    text-align: center;
+    padding: 0 1.5rem;
+    max-width: 800px;
+    width: 100%;
+  }
+
+  &__tagline {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: clamp(0.9rem, 2vw, 1.2rem);
+    color: rgba(255, 255, 255, 0.75);
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+    animation: fadeSlideUp 1s ease 0.2s both;
+  }
+
+  &__title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(2.8rem, 8vw, 6rem);
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 40px rgba(212, 175, 55, 0.3);
+
+    animation: fadeSlideUp 1s ease 0.5s both;
+  }
+
+  &__date {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(0.85rem, 2vw, 1rem);
+    color: $gold-light;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-top: 1rem;
+    animation: fadeSlideUp 1s ease 0.9s both;
+  }
+
+  &__cta {
+    display: inline-block;
+    margin-top: 2rem;
+    padding: 0.85rem 2.5rem;
+    background: transparent;
+    border: 1px solid $gold;
+    color: $gold-light;
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.3s, color 0.3s;
+    animation: fadeSlideUp 1s ease 1.2s both;
+
+    &:hover {
+      background: $gold;
+      color: $deep;
+    }
+  }
+
+  &__divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1rem 0;
+
+    &-line {
+      flex: 1;
+      max-width: 120px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, $gold-light, transparent);
+    }
+
+    &-icon {
+      color: $gold;
+      font-size: 1rem;
+    }
+  }
+
+  &__scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+  }
+
+  &__scroll-dot {
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: $gold;
+    animation: scrollDot 1.8s ease infinite;
+  }
+}
+
+// ── Reveal utilities
+.reveal-up {
+  opacity: 0;
+  animation: fadeSlideUp 1s ease forwards;
+}
+
+.delay-1 {
+  animation-delay: 0.5s;
+}
+
+.delay-2 {
+  animation-delay: 0.9s;
+}
+
+.delay-3 {
+  animation-delay: 1.2s;
+}
+
+/* ── Countdown Section ───────────────────────── */
+
+.countdown-section {
+  background: $cream;
+  padding: 4rem 1rem;
+  text-align: center;
+}
+
+.countdown-section__inner {
+  max-width: 950px;
+  margin: 0 auto;
+}
+
+.section-title {
+  margin-bottom: 2rem;
+}
+
+
+/* ── Countdown Layout ───────────────────────── */
+
+.countdown {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;              // always single line
+  gap: 0.6rem;
+}
+
+
+/* ── Cards ───────────────────────── */
+
+.countdown__card {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  border-radius: 14px;
+  padding: 1.2rem 0.9rem;
+  min-width: 70px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+}
+
+
+/* ── Numbers ───────────────────────── */
+
+.countdown__value {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 400;
+  color: $gold;
+  line-height: 1;
+}
+
+
+/* ── Labels ───────────────────────── */
+
+.countdown__label {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 0.4rem;
+  color: rgba(26, 10, 0, 0.6);
+}
+
+
+/* ── Separator ───────────────────────── */
+
+.countdown__sep {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  color: $gold;
+  font-weight: 300;
+}
+
+
+/* ── Extra Small Devices ───────────────────────── */
+
+@media (max-width: 360px) {
+  .countdown__card {
+    min-width: 60px;
+    padding: 0.9rem 0.6rem;
+  }
+
+  .countdown__value {
+    font-size: 1.6rem;
+  }
+
+  .countdown__sep {
+    font-size: 1.4rem;
+  }
+}
+
+// ── Gallery ──────────────────────────────────────────────────────────────────
+.gallery-section {
+  background: linear-gradient(135deg, #1a0a00 0%, #2d1500 50%, #1a0a00 100%);
+  padding: 5rem 1.5rem;
+
+  &__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    color: $cream;
+  }
+
+  .section-pretitle {
+    color: $gold;
+  }
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+
+    .gallery-item:first-child {
+      grid-column: span 2;
+    }
+  }
+}
+
+.gallery-item {
+  opacity: 0;
+  cursor: pointer;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+  &.scroll-revealed {
+    animation: revealIn 0.6s ease forwards;
+  }
+
+  &__inner {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(26, 10, 0, 0.55);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  &__icon {
+    font-size: 2rem;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+  }
+
+  &__label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: $gold-light;
+  }
+
+  &:hover {
+    .gallery-item__img {
+      transform: scale(1.08);
+    }
+
+    .gallery-item__overlay {
+      opacity: 1;
+    }
+  }
+}
+
+// ── Modal ─────────────────────────────────────────────────────────────────────
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+
+  &--open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  &__content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 80px rgba(212, 175, 55, 0.2);
+  }
+
+  &__close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid $gold;
+    color: $gold;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+
+    &:hover {
+      background: $gold;
+      color: $deep;
+    }
+  }
+
+  &__img {
+    display: block;
+    max-width: 90vw;
+    max-height: 85vh;
+    object-fit: contain;
+  }
+}
+
+// ── Event Section ─────────────────────────────────────────────────────────────
+.event-section {
+  position: relative;
+  padding: 6rem 1.5rem;
+  overflow: hidden;
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(10, 5, 0, 0.88), rgba(26, 10, 0, 0.92));
+    z-index: 1;
+  }
+
+  &__inner {
+    position: relative;
+    z-index: 2;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+}
+
+.event-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.event-card {
+  padding: 2.5rem 2rem;
+  text-align: center;
+  opacity: 0;
+
+  &.scroll-revealed {
+    animation: revealIn 0.6s ease forwards;
+  }
+
+  &__icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  &__title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: $gold;
+    margin-bottom: 1rem;
+  }
+
+  &__value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    color: $cream;
+    line-height: 1.5;
+  }
+
+  &__sub {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: rgba(253, 248, 240, 0.6);
+    margin-top: 0.4rem;
+  }
+
+  &__link {
+    color: $gold-light;
+    text-decoration: none;
+    transition: color 0.3s;
+
+    &:hover {
+      color: $gold;
+      text-decoration: underline;
+    }
+  }
+}
+
+// ── Footer ────────────────────────────────────────────────────────────────────
+.footer {
+  background: $deep;
+  padding: 4rem 1.5rem 2rem;
+  text-align: center;
+
+  &__petals-line {
+    color: $gold;
+    font-size: 1.2rem;
+    letter-spacing: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  &__title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: $cream;
+    margin-bottom: 0.5rem;
+  }
+
+  &__date {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.3em;
+    color: $gold;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+
+  &__note {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    color: rgba(253, 248, 240, 0.6);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
+
+  &__bottom {
+    font-size: 0.8rem;
+    color: rgba(253, 248, 240, 0.3);
+    border-top: 1px solid rgba(212, 175, 55, 0.2);
+    padding-top: 1.5rem;
+  }
+}
+
+// ── Music Button ──────────────────────────────────────────────────────────────
+.music-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 500;
+  background: rgba(26, 10, 0, 0.85);
+  border: 1px solid $gold;
+  color: $gold-light;
+  border-radius: 50px;
+  padding: 0.65rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  backdrop-filter: blur(8px);
+  transition: background 0.3s, transform 0.2s;
+  animation: pulse-glow 3s ease infinite;
+
+  &:hover {
+    background: rgba(212, 175, 55, 0.2);
+    transform: scale(1.05);
+  }
+
+  &__icon {
+    font-size: 1.2rem;
+  }
+}
+
+.hero__bg {
+  background-image: url('/assets/images/background.jpeg');
+  background-size: cover;
+  background-position: center;
+}
+
+@media (min-width: 676px) {
+  .hero__bg {
+    background-image: url('/assets/images/background_land.jpeg');
+  }
+}
